@@ -27,7 +27,8 @@ const timelines = [
   'Flexible / Planning stage',
 ];
 
-const API = 'http://localhost:5000/api/bulk-orders';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API = `${API_BASE}/api/bulk-orders`;
 
 export default function BulkOrderModal({ onClose }) {
   const [step, setStep] = useState(1); // 1: customer info, 2: shipment info, 3: success

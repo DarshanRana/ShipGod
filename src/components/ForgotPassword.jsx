@@ -3,7 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { HiMail, HiLockClosed, HiEye, HiEyeOff, HiTruck, HiArrowLeft, HiCheckCircle, HiFingerPrint } from 'react-icons/hi';
 import { validateEmail } from '../utils/validators';
 
-const API = 'http://localhost:5000/api/auth';
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+const API = `${API_BASE}/api/auth`;
 
 export default function ForgotPassword({ onGoSignIn }) {
   const [stage, setStage] = useState('email'); // 'email' | 'otp' | 'reset' | 'success'

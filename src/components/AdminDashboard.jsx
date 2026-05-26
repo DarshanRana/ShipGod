@@ -7,7 +7,7 @@ import {
 } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api`;
 
 const statusColors = {
   new: { bg: 'bg-blue-50 text-blue-700 border-blue-200', label: '🆕 New' },
