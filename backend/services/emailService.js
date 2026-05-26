@@ -1,17 +1,14 @@
-const nodemailer = require('nodemailer');
-
-let transporter;
-
-async function getTransporter() {
-  if (transporter) return transporter;
-
-  const isPlaceholder = !process.env.EMAIL_PASS || process.env.EMAIL_PASS === 'your_gmail_app_password_here';
+const sendEmail = async ({ toEmail, toName, subject, html }) => {
+  const apiKey = process.env.EMAIL_PASS;
+  const isPlaceholder = !apiKey || apiKey === 'your_gmail_app_password_here';
 
   if (isPlaceholder) {
-    console.log('\n📬  [SMTP CONFIG] Placeholder credentials detected. Generating automatic Ethereal test SMTP account...');
+    // Local Dev Fallback: Ethereal test SMTP account (not blocked on localhost)
+    const nodemailer = require('nodemailer');
+    console.log('\n📬 [SMTP CONFIG] Placeholder credentials detected. Generating automatic Ethereal test SMTP account...');
     try {
       const testAccount = await nodemailer.createTestAccount();
-      transporter = nodemailer.createTransport({
+      const transporter = nodemailer.createTransport({
         host: testAccount.smtp.host,
         port: testAccount.smtp.port,
         secure: testAccount.smtp.secure,
@@ -20,36 +17,55 @@ async function getTransporter() {
           pass: testAccount.pass,
         },
       });
-      console.log('✅  Temporary developer SMTP sandbox created successfully.');
-      console.log('📧  All outgoing test emails will log clickable browser preview links to the console!');
-    } catch (err) {
-      console.error('❌  Failed to create Ethereal SMTP sandbox, falling back to dummy log transport:', err.message);
-      transporter = nodemailer.createTransport({
-        jsonTransport: true
+      const info = await transporter.sendMail({
+        from: `"ShipGod Sandbox" <no-reply@shipgod.in>`,
+        to: toEmail,
+        subject,
+        html,
       });
+      const previewUrl = nodemailer.getTestMessageUrl(info);
+      if (previewUrl) {
+        console.log(`\n✉️   [SMTP Sandbox] Outgoing email captured!`);
+        console.log(`👉  Click here to view fully-rendered HTML email: ${previewUrl}\n`);
+      }
+    } catch (err) {
+      console.error('❌ Ethereal SMTP sandbox failed:', err.message);
     }
-  } else {
-    transporter = nodemailer.createTransport({
-      host: 'smtp-relay.brevo.com',
-      port: 587,
-      secure: false, // true for port 465, false for port 587
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+    return;
+  }
+
+  // Production: Use Brevo HTTP REST API (unblocked by Render firewall!)
+  const senderEmail = process.env.SENDER_EMAIL || process.env.ADMIN_EMAIL || 'no-reply@shipgod.in';
+
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      'accept': 'application/json',
+      'api-key': apiKey,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify({
+      sender: {
+        name: 'ShipGod',
+        email: senderEmail,
       },
-    });
+      to: [
+        {
+          email: toEmail,
+          name: toName || toEmail,
+        }
+      ],
+      subject,
+      htmlContent: html,
+    }),
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Brevo HTTP API Error: ${response.status} - ${errText}`);
   }
 
-  return transporter;
-}
-
-// Helper to log test message preview URLs
-const logPreviewUrl = (info) => {
-  const previewUrl = nodemailer.getTestMessageUrl(info);
-  if (previewUrl) {
-    console.log(`\n✉️   [SMTP Sandbox] Outgoing email captured!`);
-    console.log(`👉  Click here to view fully-rendered HTML email: ${previewUrl}\n`);
-  }
+  console.log(`📧 Email sent successfully via Brevo HTTP API to ${toEmail}`);
 };
 
 // Email to admin when a new bulk order comes in
@@ -94,14 +110,12 @@ const sendAdminAlert = async (order) => {
     </div>
   `;
 
-  const tx = await getTransporter();
-  const info = await tx.sendMail({
-    from: `"ShipGod" <${process.env.SENDER_EMAIL || process.env.ADMIN_EMAIL || 'no-reply@shipgod.in'}>`,
-    to: process.env.ADMIN_EMAIL,
+  await sendEmail({
+    toEmail: process.env.ADMIN_EMAIL,
+    toName: 'ShipGod Admin',
     subject: `🚚 New Bulk Order — ${order.weightTons} Tons | ${order.fromCity} → ${order.toCity}`,
     html,
   });
-  logPreviewUrl(info);
 };
 
 // Confirmation email to customer
@@ -131,14 +145,12 @@ const sendCustomerConfirmation = async (order) => {
     </div>
   `;
 
-  const tx = await getTransporter();
-  const info = await tx.sendMail({
-    from: `"ShipGod" <${process.env.SENDER_EMAIL || process.env.ADMIN_EMAIL || 'no-reply@shipgod.in'}>`,
-    to: order.email,
+  await sendEmail({
+    toEmail: order.email,
+    toName: order.name,
     subject: `✅ Bulk Shipment Request Received — ShipGod`,
     html,
   });
-  logPreviewUrl(info);
 };
 
 // Password reset email to user
@@ -168,14 +180,12 @@ const sendPasswordResetEmail = async (userEmail, userName, otpCode) => {
     </div>
   `;
 
-  const tx = await getTransporter();
-  const info = await tx.sendMail({
-    from: `"ShipGod" <${process.env.SENDER_EMAIL || process.env.ADMIN_EMAIL || 'no-reply@shipgod.in'}>`,
-    to: userEmail,
+  await sendEmail({
+    toEmail: userEmail,
+    toName: userName,
     subject: `🔒 Reset Your Password — OTP: ${otpCode} — ShipGod`,
     html,
   });
-  logPreviewUrl(info);
 };
 
 // Password reset success confirmation email to user
@@ -206,14 +216,12 @@ const sendPasswordResetSuccessEmail = async (userEmail, userName) => {
     </div>
   `;
 
-  const tx = await getTransporter();
-  const info = await tx.sendMail({
-    from: `"ShipGod" <${process.env.SENDER_EMAIL || process.env.ADMIN_EMAIL || 'no-reply@shipgod.in'}>`,
-    to: userEmail,
+  await sendEmail({
+    toEmail: userEmail,
+    toName: userName,
     subject: `🔒 Security Alert: Your Password Was Reset — ShipGod`,
     html,
   });
-  logPreviewUrl(info);
 };
 
 module.exports = {
