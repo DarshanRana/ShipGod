@@ -15,63 +15,52 @@ const partners = [
   { name: 'Vedanta Group', abbr: 'VED', color: '#AD1457' },
 ];
 
-// Duplicate for seamless loop
 const allPartners = [...partners, ...partners];
 
 export default function PartnersStrip() {
   return (
-    <section className="py-12 relative overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #060e1f 0%, #080f1f 100%)' }}
-    >
-      <div className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(30,79,160,0.5), transparent)' }} />
-      <div className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(30,79,160,0.5), transparent)' }} />
-
+    <section className="py-14 bg-white border-y border-gray-200">
       <div className="max-w-7xl mx-auto px-6 mb-8 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
+        <motion.p
+          initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm text-slate-400 border border-white/8 mb-3"
+          className="text-xs font-bold uppercase tracking-widest text-[#002f56] mb-2"
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-          Trusted by Industry Leaders
-        </motion.div>
+          Trusted by India's Leading Companies
+        </motion.p>
       </div>
 
-      {/* Left / Right fade masks */}
+      {/* Marquee */}
       <div className="relative overflow-hidden">
         <div className="absolute left-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(90deg, #080f1f, transparent)' }} />
+          style={{ background: 'linear-gradient(90deg, #ffffff, transparent)' }} />
         <div className="absolute right-0 top-0 bottom-0 w-24 z-10 pointer-events-none"
-          style={{ background: 'linear-gradient(-90deg, #080f1f, transparent)' }} />
+          style={{ background: 'linear-gradient(-90deg, #ffffff, transparent)' }} />
 
-        {/* Marquee track */}
         <motion.div
-          className="flex gap-5 w-max"
+          className="flex gap-4 w-max"
           animate={{ x: [0, `-${partners.length * 188}px`] }}
           transition={{
             repeat: Infinity,
             repeatType: 'loop',
-            duration: 30,
+            duration: 32,
             ease: 'linear',
           }}
         >
           {allPartners.map((p, i) => (
             <div
               key={`${p.abbr}-${i}`}
-              className="flex items-center gap-3 glass rounded-2xl px-5 py-3 border border-white/8 shrink-0 hover:border-white/20 transition-all cursor-default"
-              style={{ minWidth: '170px' }}
+              className="flex items-center gap-3 bg-white rounded-lg px-5 py-3.5 border border-gray-200 shrink-0 hover:border-[#0077c8] hover:shadow-sm transition-all cursor-default"
+              style={{ minWidth: '172px' }}
             >
-              {/* Logo placeholder */}
               <div
-                className="w-9 h-9 rounded-xl flex items-center justify-center text-xs font-extrabold text-white shrink-0"
-                style={{ background: `${p.color}30`, border: `1px solid ${p.color}40` }}
+                className="w-9 h-9 rounded-lg flex items-center justify-center text-xs font-extrabold shrink-0"
+                style={{ background: `${p.color}15`, border: `1px solid ${p.color}30`, color: p.color }}
               >
                 {p.abbr.slice(0, 2)}
               </div>
-              <span className="text-slate-300 text-sm font-semibold whitespace-nowrap">{p.name}</span>
+              <span className="text-[#002f56] text-sm font-semibold whitespace-nowrap">{p.name}</span>
             </div>
           ))}
         </motion.div>

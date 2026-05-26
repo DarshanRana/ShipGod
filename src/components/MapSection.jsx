@@ -67,6 +67,17 @@ function FitBounds({ pins }) {
 }
 
 export default function MapSection({ sticky = false, onPinClick }) {
+  useEffect(() => {
+    const linkId = 'leaflet-css-dynamic';
+    if (!document.getElementById(linkId)) {
+      const link = document.createElement('link');
+      link.id = linkId;
+      link.rel = 'stylesheet';
+      link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+      document.head.appendChild(link);
+    }
+  }, []);
+
   return (
     <div className={`${sticky ? 'lg:sticky lg:top-24' : ''}`}>
       <div className="glass rounded-2xl border border-white/10 overflow-hidden shadow-2xl">

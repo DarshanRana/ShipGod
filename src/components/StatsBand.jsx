@@ -2,10 +2,10 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 
 const stats = [
-  { value: 2400, suffix: '+', label: 'Verified Carriers', icon: '🚛', color: '#f97316' },
-  { value: 10000, suffix: '+', label: 'Shipments Completed', icon: '📦', color: '#3b82f6' },
-  { value: 28, suffix: '', label: 'States Covered', icon: '🗺️', color: '#10b981' },
-  { value: 4.9, suffix: '★', label: 'Customer Rating', icon: '⭐', color: '#eab308', isFloat: true },
+  { value: 2400, suffix: '+', label: 'Verified Carriers', icon: '🚛', color: '#0077c8' },
+  { value: 10000, suffix: '+', label: 'Shipments Completed', icon: '📦', color: '#0fa14a' },
+  { value: 28, suffix: '', label: 'States Covered', icon: '🗺️', color: '#002f56' },
+  { value: 4.9, suffix: '★', label: 'Customer Rating', icon: '⭐', color: '#f59e0b', isFloat: true },
 ];
 
 function Counter({ target, suffix, duration = 2, isFloat }) {
@@ -40,15 +40,7 @@ function Counter({ target, suffix, duration = 2, isFloat }) {
 
 export default function StatsBand() {
   return (
-    <section className="relative py-12 overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, #060e1f 0%, #0a1628 50%, #060e1f 100%)' }}
-    >
-      {/* top/bottom borders */}
-      <div className="absolute top-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.4), transparent)' }} />
-      <div className="absolute bottom-0 left-0 right-0 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(249,115,22,0.4), transparent)' }} />
-
+    <section className="bg-white border-y border-gray-200 py-12">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {stats.map((stat, i) => (
@@ -60,19 +52,15 @@ export default function StatsBand() {
               transition={{ duration: 0.5, delay: i * 0.1 }}
               className="relative flex flex-col items-center text-center group"
             >
-              {/* Vertical divider (except last) */}
               {i < stats.length - 1 && (
-                <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 h-12 w-px"
-                  style={{ background: 'rgba(255,255,255,0.08)' }} />
+                <div className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 h-12 w-px bg-gray-200" />
               )}
 
-              <div
-                className="text-3xl mb-2 group-hover:scale-110 transition-transform duration-300"
-              >{stat.icon}</div>
+              <div className="text-3xl mb-2">{stat.icon}</div>
 
               <div
                 className="text-3xl md:text-4xl font-extrabold mb-1 tabular-nums"
-                style={{ color: stat.color, textShadow: `0 0 24px ${stat.color}60` }}
+                style={{ color: stat.color }}
               >
                 <Counter
                   target={stat.value}
@@ -80,7 +68,7 @@ export default function StatsBand() {
                   isFloat={stat.isFloat}
                 />
               </div>
-              <div className="text-slate-400 text-sm font-medium">{stat.label}</div>
+              <div className="text-slate-500 text-xs font-bold uppercase tracking-wider">{stat.label}</div>
             </motion.div>
           ))}
         </div>

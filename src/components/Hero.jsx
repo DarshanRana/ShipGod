@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import { useState, useRef } from 'react';
-import { HiLocationMarker, HiSearch, HiX, HiChevronDown, HiShieldCheck, HiLightningBolt, HiClock } from 'react-icons/hi';
+import { useState } from 'react';
+import { HiLocationMarker, HiSearch, HiX, HiChevronDown, HiShieldCheck, HiStar, HiTruck } from 'react-icons/hi';
 import { AnimatePresence } from 'framer-motion';
 
 const machineryTypes = [
@@ -16,14 +16,7 @@ const indianCities = [
   'Kochi', 'Coimbatore', 'Chandigarh', 'Bhubaneswar', 'Guwahati',
 ];
 
-const dropdownStyle = {
-  background: '#0c1e3d',
-  border: '1px solid rgba(249,115,22,0.2)',
-  boxShadow: '0 12px 48px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04)',
-  backdropFilter: 'blur(40px)',
-};
-
-function CityInput({ placeholder, value, onChange }) {
+function CityInput({ placeholder, value, onChange, icon: Icon }) {
   const [open, setOpen] = useState(false);
   const suggestions = value.length >= 1
     ? indianCities.filter(c => c.toLowerCase().startsWith(value.toLowerCase())).slice(0, 7)
@@ -31,8 +24,8 @@ function CityInput({ placeholder, value, onChange }) {
 
   return (
     <div className="relative flex-1 min-w-0">
-      <div className="flex items-center gap-2 px-4 py-3.5">
-        <HiLocationMarker className="text-orange-400 text-base shrink-0" />
+      <div className="flex items-center gap-2 px-4 py-4">
+        <Icon className="text-[#0077c8] text-base shrink-0" />
         <input
           type="text"
           value={value}
@@ -40,33 +33,34 @@ function CityInput({ placeholder, value, onChange }) {
           onFocus={() => setOpen(true)}
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           placeholder={placeholder}
-          className="bg-transparent text-sm text-white placeholder-slate-500 outline-none w-full"
+          className="bg-transparent text-sm placeholder-slate-400 outline-none w-full font-medium"
+          style={{ color: 'var(--text-primary)' }}
           autoComplete="off"
         />
         {value && (
           <button type="button" onMouseDown={e => e.preventDefault()} onClick={() => onChange('')}>
-            <HiX className="text-slate-500 hover:text-orange-400 text-xs" />
+            <HiX className="text-slate-400 hover:text-slate-600 text-xs" />
           </button>
         )}
       </div>
       <AnimatePresence>
         {open && suggestions.length > 0 && (
           <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.98 }}
-            transition={{ duration: 0.18 }}
-            className="absolute top-full left-0 w-full rounded-xl overflow-hidden z-[9999] mt-1"
-            style={dropdownStyle}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className="absolute top-full left-0 w-full rounded-lg shadow-lg z-[9999] mt-1 overflow-hidden border"
+            style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)' }}
           >
-            <div className="h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(249,115,22,0.5),transparent)' }} />
             {suggestions.map(city => (
               <button key={city} type="button"
                 onMouseDown={e => e.preventDefault()}
                 onClick={() => { onChange(city); setOpen(false); }}
-                className="w-full text-left px-4 py-2.5 text-sm text-slate-300 hover:bg-orange-500/10 hover:text-orange-300 flex items-center gap-2 border-b border-white/[0.03] last:border-0 transition-all"
+                className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-2 border-b last:border-0 transition-colors hover:bg-blue-50 hover:text-[#0077c8]"
+                style={{ color: 'var(--text-secondary)', borderColor: 'var(--border-color)' }}
               >
-                <HiLocationMarker className="text-orange-400/50 text-xs shrink-0" /> {city}
+                <HiLocationMarker className="text-[#0077c8]/50 text-xs shrink-0" /> {city}
               </button>
             ))}
           </motion.div>
@@ -81,10 +75,10 @@ function CategorySelect({ value, onChange }) {
   return (
     <div className="relative flex-1 min-w-0">
       <button type="button" onClick={() => setOpen(!open)}
-        className="w-full flex items-center gap-2 px-4 py-3.5 text-sm text-left"
+        className="w-full flex items-center gap-2 px-4 py-4 text-sm text-left"
       >
-        <HiSearch className="text-orange-400 text-base shrink-0" />
-        <span className={`flex-1 truncate ${value ? 'text-white' : 'text-slate-500'}`}>
+        <HiTruck className="text-[#0077c8] text-base shrink-0" />
+        <span className={`flex-1 truncate font-medium ${value ? 'text-slate-800' : 'text-slate-400'}`}>
           {value || 'Equipment Type'}
         </span>
         <HiChevronDown className={`text-slate-400 text-sm transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -92,18 +86,18 @@ function CategorySelect({ value, onChange }) {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -8, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -4, scale: 0.98 }}
-            transition={{ duration: 0.18 }}
-            className="absolute top-full left-0 w-full rounded-xl overflow-hidden z-[9999] mt-1 max-h-56 overflow-y-auto"
-            style={dropdownStyle}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className="absolute top-full left-0 w-full rounded-lg shadow-lg z-[9999] mt-1 max-h-56 overflow-y-auto border"
+            style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)' }}
           >
-            <div className="h-px" style={{ background: 'linear-gradient(90deg,transparent,rgba(249,115,22,0.5),transparent)' }} />
             {machineryTypes.map(type => (
               <button key={type} type="button"
                 onClick={() => { onChange(type); setOpen(false); }}
-                className={`w-full text-left px-4 py-2.5 text-sm border-b border-white/[0.03] last:border-0 transition-all hover:bg-orange-500/10 hover:text-orange-300 ${value === type ? 'text-orange-400 bg-orange-500/10' : 'text-slate-300'}`}
+                className={`w-full text-left px-4 py-2.5 text-sm border-b last:border-0 transition-colors hover:bg-blue-50 hover:text-[#0077c8] ${value === type ? 'text-[#0077c8] bg-blue-50 font-semibold' : ''}`}
+                style={{ color: value === type ? undefined : 'var(--text-secondary)', borderColor: 'var(--border-color)' }}
               >
                 {type}
               </button>
@@ -115,36 +109,14 @@ function CategorySelect({ value, onChange }) {
   );
 }
 
-// Floating particles
-function Particle({ style }) {
-  return (
-    <motion.div
-      className="absolute rounded-full pointer-events-none"
-      style={style}
-      animate={{ y: [0, -30, 0], x: [0, 10, -8, 0], opacity: [0.08, 0.2, 0.08] }}
-      transition={{ duration: Math.random() * 6 + 7, repeat: Infinity, ease: 'easeInOut', delay: Math.random() * 4 }}
-    />
-  );
-}
-
-const particles = Array.from({ length: 12 }, (_, i) => ({
-  id: i,
-  style: {
-    width: Math.random() * 5 + 3 + 'px',
-    height: Math.random() * 5 + 3 + 'px',
-    left: Math.random() * 60 + '%',
-    top: Math.random() * 100 + '%',
-    background: i % 3 === 0 ? '#f97316' : i % 3 === 1 ? '#3b82f6' : '#eab308',
-  },
-}));
-
-const trustPills = [
-  { icon: HiShieldCheck, text: 'Verified Carriers Only' },
-  { icon: HiLightningBolt, text: 'Quotes in 2 Minutes' },
-  { icon: HiClock, text: '24/7 Support' },
+const stats = [
+  { value: '2,400+', label: 'Verified Carriers' },
+  { value: '98%', label: 'On-Time Delivery' },
+  { value: '15,000+', label: 'Loads Shipped' },
+  { value: '4.9★', label: 'Avg. Rating' },
 ];
 
-export default function Hero({ onSearchSubmit }) {
+export default function Hero({ onSearchSubmit, onBulkOrder }) {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [equipment, setEquipment] = useState('');
@@ -157,108 +129,80 @@ export default function Hero({ onSearchSubmit }) {
     setTimeout(() => {
       setLoading(false);
       onSearchSubmit && onSearchSubmit({ pickup: from, drop: to, machinery: equipment });
-    }, 1400);
+    }, 1200);
   };
 
   return (
-    <section className="relative z-10 min-h-screen flex items-center hero-gradient noise-overlay">
-      {/* Decorative bg layer — overflow-hidden here only, NOT on the section */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Grid lines */}
-        <div className="absolute inset-0 opacity-[0.035]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(255,255,255,0.6) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.6) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
-          }}
-        />
+    <section className="relative bg-[#002f56] pt-24">
+      {/* Hero Content */}
+      <div className="max-w-7xl mx-auto px-6 pt-12 pb-16">
+        <div className="text-center max-w-4xl mx-auto">
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#0fa14a]/20 border border-[#0fa14a]/40 text-[#4ade80] text-xs font-semibold uppercase tracking-widest mb-6"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-[#0fa14a] animate-pulse" />
+            India's #1 Heavy Machinery Transport Platform
+          </motion.div>
 
-        {/* Particles */}
-        {particles.map(p => <Particle key={p.id} style={p.style} />)}
+          {/* Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight tracking-tight mb-5"
+          >
+            The Smarter Way to Ship{' '}
+            <span className="text-[#0fa14a]">Heavy Equipment</span>{' '}
+            Across India
+          </motion.h1>
 
-        {/* Glow blobs */}
-        <div className="absolute top-1/3 left-0 w-[500px] h-[500px] rounded-full opacity-[0.1]"
-          style={{ background: 'radial-gradient(circle, #1e4fa0 0%, transparent 70%)' }} />
-        <div className="absolute bottom-0 right-1/3 w-[400px] h-[400px] rounded-full opacity-[0.08]"
-          style={{ background: 'radial-gradient(circle, #f97316 0%, transparent 70%)' }} />
-      </div>
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-blue-100/80 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
+          >
+            Connect with 2,400+ verified carriers. Get competitive quotes, book securely, and track your shipment in real-time.
+          </motion.p>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-6 w-full pt-24 pb-16">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-
-          {/* ─── LEFT COLUMN ─── */}
-          <div>
-            {/* Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-2 glass rounded-full text-sm font-medium text-orange-300 border border-orange-500/20 mb-6"
-            >
-              <span className="w-2 h-2 rounded-full bg-orange-400 animate-pulse" />
-              India's #1 Heavy Machinery Transport Platform
-            </motion.div>
-
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.12 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight mb-5"
-            >
-              <span className="text-white">Ship Any Heavy</span>
-              <br />
-              <span className="gradient-text">Equipment, Anywhere</span>
-              <br />
-              <span className="text-white text-3xl md:text-4xl font-bold">in India.</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.25 }}
-              className="text-slate-400 text-base md:text-lg max-w-xl mb-8 leading-relaxed"
-            >
-              Connect with 2,400+ verified heavy haulage carriers instantly.
-              Compare quotes, book securely, and track your shipment in real-time.
-            </motion.p>
-
-            {/* ── Inline Search Bar ── */}
-            <motion.form
-              onSubmit={handleSubmit}
-              initial={{ opacity: 0, y: 30, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.38 }}
-              className="relative mb-5"
-            >
-              <div
-                className="flex flex-col sm:flex-row items-stretch rounded-2xl overflow-visible border border-white/10 shadow-2xl shadow-black/50"
-                style={{ background: 'rgba(255,255,255,0.06)', backdropFilter: 'blur(20px)' }}
-              >
+          {/* ─── Search Card ─── */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="rounded-2xl shadow-2xl p-2 max-w-4xl mx-auto border"
+            style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-color)' }}
+          >
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col md:flex-row items-stretch gap-0">
                 {/* From */}
-                <CityInput placeholder="From (city)" value={from} onChange={setFrom} />
-
-                {/* Divider */}
-                <div className="hidden sm:block w-px bg-white/8 my-2 shrink-0" />
-                <div className="sm:hidden h-px bg-white/8 mx-4 shrink-0" />
+                <div className="flex-1 border-b md:border-b-0 md:border-r" style={{ borderColor: 'var(--border-color)' }}>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#002f56] px-4 pt-3 pb-0.5">From</p>
+                  <CityInput placeholder="Pickup city" value={from} onChange={setFrom} icon={HiLocationMarker} />
+                </div>
 
                 {/* To */}
-                <CityInput placeholder="To (city)" value={to} onChange={setTo} />
-
-                {/* Divider */}
-                <div className="hidden sm:block w-px bg-white/8 my-2 shrink-0" />
-                <div className="sm:hidden h-px bg-white/8 mx-4 shrink-0" />
+                <div className="flex-1 border-b md:border-b-0 md:border-r" style={{ borderColor: 'var(--border-color)' }}>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#002f56] px-4 pt-3 pb-0.5">To</p>
+                  <CityInput placeholder="Destination city" value={to} onChange={setTo} icon={HiLocationMarker} />
+                </div>
 
                 {/* Equipment */}
-                <CategorySelect value={equipment} onChange={setEquipment} />
+                <div className="flex-1 border-b md:border-b-0 md:border-r" style={{ borderColor: 'var(--border-color)' }}>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#002f56] px-4 pt-3 pb-0.5">What</p>
+                  <CategorySelect value={equipment} onChange={setEquipment} />
+                </div>
 
-                {/* Search Button */}
-                <div className="p-2 shrink-0">
-                  <motion.button
+                {/* Submit */}
+                <div className="flex items-center justify-center p-2 shrink-0">
+                  <button
                     type="submit"
                     disabled={loading || !from || !to}
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    className="btn-primary h-full min-h-[44px] px-6 rounded-xl flex items-center gap-2 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed w-full sm:w-auto"
+                    className="w-full md:w-auto flex items-center justify-center gap-2 bg-[#0fa14a] hover:bg-[#0d8a3f] text-white font-bold px-8 py-4 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm whitespace-nowrap"
                   >
                     {loading ? (
                       <motion.div
@@ -267,79 +211,72 @@ export default function Hero({ onSearchSubmit }) {
                         className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full"
                       />
                     ) : (
-                      <HiSearch className="text-lg" />
+                      <HiSearch className="text-base" />
                     )}
-                    {loading ? 'Searching…' : 'Find Carriers'}
-                  </motion.button>
+                    {loading ? 'Searching…' : 'Get Free Quotes'}
+                  </button>
                 </div>
               </div>
-            </motion.form>
-
-            {/* Trust pills */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-wrap items-center gap-3"
-            >
-              {trustPills.map(({ icon: Icon, text }) => (
-                <div key={text} className="flex items-center gap-1.5 text-slate-400 text-xs font-medium">
-                  <Icon className="text-orange-400 text-sm" />
-                  {text}
-                </div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* ─── RIGHT COLUMN — Hero Image ─── */}
-          <motion.div
-            initial={{ opacity: 0, x: 50, scale: 0.96 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            transition={{ duration: 1, delay: 0.3, ease: 'easeOut' }}
-            className="hidden lg:block relative"
-          >
-            {/* Image container with glow frame */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl"
-              style={{
-                boxShadow: '0 0 0 1px rgba(249,115,22,0.15), 0 32px 80px rgba(0,0,0,0.7), 0 0 80px rgba(249,115,22,0.08)',
-              }}
-            >
-              <img
-                src="/hero_truck.png"
-                alt="Heavy transport truck carrying industrial excavator at golden hour"
-                className="w-full h-auto object-cover rounded-3xl"
-                style={{ maxHeight: '480px', objectPosition: 'center' }}
-              />
-              {/* Overlay gradient to blend with dark bg */}
-              <div className="absolute inset-0 rounded-3xl"
-                style={{ background: 'linear-gradient(135deg, rgba(10,22,40,0.3) 0%, transparent 50%, rgba(10,22,40,0.5) 100%)' }} />
-            </div>
-
-            {/* Floating badge — Available Now */}
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-              className="absolute -bottom-4 -left-4 glass-strong rounded-2xl px-4 py-3 border border-white/10 shadow-xl"
-            >
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-semibold text-white">340 carriers available now</span>
-              </div>
-            </motion.div>
-
-            {/* Floating badge — Rating */}
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-              className="absolute -top-4 -right-4 glass-strong rounded-2xl px-4 py-3 border border-white/10 shadow-xl"
-            >
-              <div className="flex items-center gap-2">
-                <span className="text-yellow-400 text-sm">⭐</span>
-                <span className="text-xs font-semibold text-white">4.9 · 3,200+ Reviews</span>
-              </div>
-            </motion.div>
+            </form>
           </motion.div>
 
+          {/* Bulk Order CTA */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5, duration: 0.5 }}
+            className="mt-5 flex items-center justify-center gap-3 flex-wrap"
+          >
+            <div className="flex items-center gap-2 text-blue-200/60 text-sm">
+              <span>Need 500+ tons shipped?</span>
+            </div>
+            <button
+              onClick={onBulkOrder}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 text-white font-bold text-sm transition-all"
+            >
+              🚛 Request Expert Guidance
+            </button>
+          </motion.div>
+
+          {/* Trust Indicators */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-wrap items-center justify-center gap-6 mt-8"
+          >
+            <div className="flex items-center gap-1.5 text-blue-100/70 text-sm">
+              <HiShieldCheck className="text-[#0fa14a] text-base" />
+              <span>All carriers verified</span>
+            </div>
+            <div className="flex items-center gap-1.5 text-blue-100/70 text-sm">
+              <HiStar className="text-yellow-400 text-base" />
+              <span>4.9/5 customer rating</span>
+            </div>
+            <div className="text-blue-100/70 text-sm">
+              📦 <span>15,000+ successful shipments</span>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Stats Bar */}
+      <div className="bg-[#001f3d] border-t border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {stats.map((stat, i) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + i * 0.1 }}
+                className="text-center"
+              >
+                <div className="text-2xl md:text-3xl font-extrabold text-white">{stat.value}</div>
+                <div className="text-blue-200/60 text-xs font-semibold uppercase tracking-wider mt-0.5">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

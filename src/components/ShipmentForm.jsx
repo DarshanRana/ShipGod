@@ -42,17 +42,9 @@ const indianCities = [
 ];
 
 const dropdownStyle = {
-  background: '#0c1e3d',
-  border: '1px solid rgba(249, 115, 22, 0.18)',
-  boxShadow: `
-    0 4px 6px -2px rgba(0,0,0,0.6),
-    0 12px 32px -4px rgba(0,0,0,0.8),
-    8px 16px 40px -8px rgba(0,0,0,0.7),
-    0 0 0 1px rgba(255,255,255,0.04),
-    inset 0 1px 0 rgba(255,255,255,0.06)
-  `,
-  backdropFilter: 'blur(40px)',
-  WebkitBackdropFilter: 'blur(40px)',
+  background: '#ffffff',
+  border: '1px solid #e5e7eb',
+  boxShadow: '0 10px 20px -5px rgba(0, 0, 0, 0.1)',
 };
 
 /* ─── City Autocomplete ─── */
@@ -81,11 +73,11 @@ function CityAutocomplete({ label, value, onChange, id }) {
 
   return (
     <div className={`relative ${open ? 'z-50' : 'z-0'}`}>
-      <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+      <label className="block text-xs font-bold text-[#002f56] uppercase tracking-widest mb-2">
         {label}
       </label>
-      <div className="glass rounded-xl flex items-center gap-3 px-4 py-3 border border-transparent hover:border-orange-500/20 focus-within:border-orange-500/40 transition-all">
-        <HiLocationMarker className="text-orange-400 text-lg shrink-0" />
+      <div className="bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-200 hover:border-[#0077c8] focus-within:border-[#0077c8] transition-all">
+        <HiLocationMarker className="text-[#0077c8] text-lg shrink-0" />
         <input
           ref={inputRef}
           id={id}
@@ -96,7 +88,7 @@ function CityAutocomplete({ label, value, onChange, id }) {
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           placeholder="City, area, or pin code"
           autoComplete="off"
-          className="bg-transparent flex-1 text-sm text-white placeholder-slate-500 outline-none"
+          className="bg-transparent flex-1 text-sm text-slate-900 placeholder-slate-400 outline-none"
         />
         {query && (
           <button
@@ -129,10 +121,10 @@ function CityAutocomplete({ label, value, onChange, id }) {
                 type="button"
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => handleSelect(city)}
-                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 border-b border-white/[0.03] last:border-b-0 hover:bg-orange-500/10 hover:text-orange-300 hover:pl-5 flex items-center gap-2 ${
+                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 border-b border-gray-100 last:border-b-0 hover:bg-blue-50 hover:text-[#0077c8] hover:pl-5 flex items-center gap-2 ${
                   value === city
-                    ? 'text-orange-400 bg-orange-500/10 border-l-2 border-l-orange-500 pl-3'
-                    : 'text-slate-300'
+                    ? 'text-[#0077c8] bg-blue-50 border-l-2 border-l-[#0077c8] pl-3'
+                    : 'text-slate-600'
                 }`}
               >
                 <HiLocationMarker className="text-orange-400/50 text-xs shrink-0" />
@@ -150,17 +142,17 @@ function SelectField({ icon: Icon, label, value, onChange, options, id }) {
   const [open, setOpen] = useState(false);
   return (
     <div className={`relative ${open ? 'z-50' : 'z-0'}`}>
-      <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+      <label className="block text-xs font-bold text-[#002f56] uppercase tracking-widest mb-2">
         {label}
       </label>
       <button
         id={id}
         type="button"
         onClick={() => setOpen(!open)}
-        className="w-full glass rounded-xl px-4 py-3 flex items-center gap-3 text-left hover:border-orange-500/30 transition-all border border-transparent focus:outline-none focus:border-orange-500/50"
+        className="w-full bg-white shadow-sm rounded-lg px-4 py-3 flex items-center gap-3 text-left hover:border-[#0077c8] transition-all border border-gray-200 focus:outline-none focus:border-[#0077c8]"
       >
-        <Icon className="text-orange-400 text-lg shrink-0" />
-        <span className={`flex-1 text-sm truncate ${value ? 'text-white' : 'text-slate-500'}`}>
+        <Icon className="text-[#0077c8] text-lg shrink-0" />
+        <span className={`flex-1 text-sm truncate font-medium ${value ? 'text-slate-800' : 'text-slate-400'}`}>
           {value || `Select ${label}`}
         </span>
         <HiChevronDown className={`text-slate-400 transition-transform ${open ? 'rotate-180' : ''}`} />
@@ -174,17 +166,9 @@ function SelectField({ icon: Icon, label, value, onChange, options, id }) {
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="absolute z-[9999] mt-2 w-full rounded-xl overflow-hidden max-h-56 overflow-y-auto"
             style={{
-              background: '#0c1e3d',
-              border: '1px solid rgba(249, 115, 22, 0.18)',
-              boxShadow: `
-                0 4px 6px -2px rgba(0,0,0,0.6),
-                0 12px 32px -4px rgba(0,0,0,0.8),
-                8px 16px 40px -8px rgba(0,0,0,0.7),
-                0 0 0 1px rgba(255,255,255,0.04),
-                inset 0 1px 0 rgba(255,255,255,0.06)
-              `,
-              backdropFilter: 'blur(40px)',
-              WebkitBackdropFilter: 'blur(40px)',
+              background: '#ffffff',
+              border: '1px solid #e2e8f0',
+              boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
             }}
           >
             {/* Top accent line */}
@@ -197,10 +181,10 @@ function SelectField({ icon: Icon, label, value, onChange, options, id }) {
                 key={opt}
                 type="button"
                 onClick={() => { onChange(opt); setOpen(false); }}
-                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 border-b border-white/[0.03] last:border-b-0 hover:bg-orange-500/10 hover:text-orange-300 hover:pl-5 ${
+                className={`w-full text-left px-4 py-2.5 text-sm transition-all duration-150 border-b border-gray-100 last:border-b-0 hover:bg-blue-50 hover:text-[#0077c8] hover:pl-5 ${
                   value === opt
-                    ? 'text-orange-400 bg-orange-500/10 border-l-2 border-l-orange-500 pl-3'
-                    : 'text-slate-300'
+                    ? 'text-[#0077c8] bg-blue-50 border-l-2 border-l-[#0077c8] pl-3'
+                    : 'text-slate-600'
                 }`}
               >
                 {opt}
@@ -216,18 +200,18 @@ function SelectField({ icon: Icon, label, value, onChange, options, id }) {
 function InputField({ icon: Icon, label, placeholder, value, onChange, id }) {
   return (
     <div>
-      <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+      <label className="block text-xs font-bold text-[#002f56] uppercase tracking-widest mb-2">
         {label}
       </label>
-      <div className="glass rounded-xl flex items-center gap-3 px-4 py-3 border border-transparent hover:border-orange-500/20 focus-within:border-orange-500/40 transition-all">
-        <Icon className="text-orange-400 text-lg shrink-0" />
+      <div className="bg-white rounded-lg flex items-center gap-3 px-4 py-3 border border-gray-200 hover:border-[#0077c8] focus-within:border-[#0077c8] transition-all">
+        <Icon className="text-[#0077c8] text-lg shrink-0" />
         <input
           id={id}
           type="text"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="bg-transparent flex-1 text-sm text-white placeholder-slate-500 outline-none"
+          className="bg-transparent flex-1 text-sm text-slate-900 placeholder-slate-400 outline-none"
         />
       </div>
     </div>
@@ -266,15 +250,15 @@ export default function ShipmentForm({ onSubmit, compact = false }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className={`glass-strong rounded-2xl border border-white/10 shadow-2xl shadow-black/50 ${
+      className={`bg-white rounded-2xl border border-gray-200 shadow-lg ${
         compact ? 'p-6' : 'p-8'
       }`}
     >
       {!compact && (
-        <h2 className="text-2xl font-bold text-white mb-2">Get Transport Quotes</h2>
+        <h2 className="text-2xl font-extrabold text-[#002f56] mb-2">Get Transport Quotes</h2>
       )}
       {!compact && (
-        <p className="text-slate-400 text-sm mb-6">
+        <p className="text-slate-500 text-sm mb-6">
           Fill in your shipment details to instantly match with verified carriers.
         </p>
       )}
@@ -319,15 +303,15 @@ export default function ShipmentForm({ onSubmit, compact = false }) {
 
         {/* Image Upload */}
         <div>
-          <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
+          <label className="block text-xs font-bold text-[#002f56] uppercase tracking-widest mb-2">
             Equipment Photo (Optional)
           </label>
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="w-full glass rounded-xl px-4 py-3 flex items-center gap-3 border border-dashed border-white/15 hover:border-orange-500/30 transition-all"
+            className="w-full bg-[#f5f6f7] rounded-lg px-4 py-3 flex items-center gap-3 border border-dashed border-gray-300 hover:border-[#0077c8] hover:bg-blue-50 transition-all"
           >
-            <HiCamera className="text-orange-400 text-lg shrink-0" />
+            <HiCamera className="text-[#0077c8] text-lg shrink-0" />
             <span className="flex-1 text-sm text-slate-500 text-left truncate">
               {imageName || 'Upload equipment photo'}
             </span>
