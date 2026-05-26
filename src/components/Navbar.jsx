@@ -8,7 +8,7 @@ const navLinks = [
   { label: 'Reviews', href: '#testimonials' },
 ];
 
-export default function Navbar({ onSearchClick, darkMode, onToggleDark, onAboutClick, onSignInClick, onSignUpClick, onHomeClick, onAdminClick }) {
+export default function Navbar({ onSearchClick, darkMode, onToggleDark, onAboutClick, onSignInClick, onSignUpClick, onHomeClick, onAdminClick, onLinkClick }) {
   const { user, signOut } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -51,6 +51,10 @@ export default function Navbar({ onSearchClick, darkMode, onToggleDark, onAboutC
             <a
               key={link.label}
               href={link.href}
+              onClick={(e) => {
+                e.preventDefault();
+                onLinkClick && onLinkClick(link.href.substring(1));
+              }}
               className={`text-sm font-semibold uppercase tracking-wide transition-colors duration-200 ${scrolled
                   ? 'text-slate-700 hover:text-[#0077c8]'
                   : 'text-white/90 hover:text-white'
@@ -180,7 +184,11 @@ export default function Navbar({ onSearchClick, darkMode, onToggleDark, onAboutC
                 <a
                   key={link.label}
                   href={link.href}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setMenuOpen(false);
+                    onLinkClick && onLinkClick(link.href.substring(1));
+                  }}
                   className="font-semibold uppercase tracking-wide text-sm hover:text-[#0077c8] transition-colors"
                   style={{ color: 'var(--text-primary)' }}
                 >

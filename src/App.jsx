@@ -100,7 +100,26 @@ export default function App() {
     }
   };
 
-      const goToAbout = () => {
+  const handleNavClick = (anchorId) => {
+    if (page !== 'home') {
+      setPage('home');
+      setTimeout(() => {
+        const el = document.getElementById(anchorId);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth' });
+        } else {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }, 450);
+    } else {
+      const el = document.getElementById(anchorId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
+
+  const goToAbout = () => {
     setPage('about');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -141,6 +160,7 @@ export default function App() {
         onSignUpClick={goToSignUp}
         onHomeClick={goHome}
         onAdminClick={goToAdmin}
+        onLinkClick={handleNavClick}
       />
 
       <AnimatePresence mode="wait">
