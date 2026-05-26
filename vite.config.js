@@ -7,6 +7,15 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    watch: {
+      ignored: [
+        '**/backend/**',
+        '**/.git/**',
+        '**/dist/**',
+      ]
+    }
+  },
   build: {
     rollupOptions: {
       output: {
